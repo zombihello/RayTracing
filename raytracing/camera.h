@@ -3,12 +3,14 @@
 
 #include "math/ray.h"
 
+#define MATH_PI			3.14159265359f
+
 //---------------------------------------------------------------------//
 
 class Camera
 {
 public:
-	Camera();
+	Camera( const Math::Vector3D& LookFrom, const Math::Vector3D& LookAt, const Math::Vector3D& Up, float FOV, float Aspect );
 
 	inline Math::Ray		GetRay( float U, float V )
 	{

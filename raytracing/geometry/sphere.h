@@ -16,12 +16,14 @@ namespace Geometry
 		virtual bool			IsHit( const Math::Ray& Ray, float TMin, float TMax, HitRecord& HitRecord ) const;
 
 		// Sphere
-		Sphere();
-		Sphere( const Math::Vector3D& Center, float Radius );
+		Sphere( IMaterial* Material );
+		Sphere( const Math::Vector3D& Center, float Radius, IMaterial* Material );
 
 	private:
-		Math::Vector3D			center;
 		float					radius;
+		Math::Vector3D			center;
+		
+		IMaterial*				material;
 	};
 
 	//---------------------------------------------------------------------//

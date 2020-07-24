@@ -6,32 +6,24 @@
 #include "math/ray.h"
 #include "geometry/sphere.h"
 #include "common/types.h"
+#include "utils.h"
+#include "lambertian.h"
+#include "metal.h"
+#include "dielectric.h"
 #include "hitablelist.h"
 #include "camera.h"
 
-inline float		drand48()
-{
-	return ( float ) rand() / RAND_MAX;
-}
-
-Math::Vector3D		RandomInUnitSphere()
-{
-	Math::Vector3D		position;
-	do
-	{
-		position = 2.f * Math::Vector3D( drand48(), drand48(), drand48() ) - Math::Vector3D( 1.f, 1.f, 1.f );
-	}
-	while ( position.GetSquaredLength() >= 1.f );
-	return position;
-}
-
-Math::Vector3D		Color( const Math::Ray& Ray, IHitable* World )
+Math::Vector3D		Color( const Math::Ray& Ray, IHitable* World, int Depth )
 {
 	HitRecord		hitRecord;
 	if ( World->IsHit( Ray, 0.001f, std::numeric_limits< float >::max(), hitRecord ) )
 	{
-		Math::Vector3D		target = hitRecord.p + hitRecord.normal + RandomInUnitSphere();
-		return 0.5f * Color( Math::Ray( hitRecord.p, target - hitRecord.p ), World );
+		Math::Ray			scattered;
+		Math::Vector3D		attenuation;
+		if ( Depth < 50 && hitRecord.material->Scatter( Ray, hitRecord, attenuation, scattered ) )
+			return attenuation * Color( scattered, World, Depth + 1 );
+		else
+			return Math::Vector3D( 0.f, 0.f, 0.f );
 	}
 	else
 	{
@@ -40,7 +32,7 @@ Math::Vector3D		Color( const Math::Ray& Ray, IHitable* World )
 		return ( 1.f - t ) * Math::Vector3D( 1.f, 1.f, 1.f ) + t * Math::Vector3D( 0.5f, 0.7f, 1.f );
 	}
 }
-
+#include <cmath>
 int main()
 {
 	std::ofstream		render( "output.ppm" );
@@ -50,13 +42,24 @@ int main()
 	
 	render << "P3\n" << width << " " << height << "\n255\n";
 
-	Geometry::Sphere		sphere1( Math::Vector3D( 0.f, 1.f, -1.f ), 0.5f );
-	Geometry::Sphere		sphere2( Math::Vector3D( 0.f, -100.5f, -1.f ), 100.f );
-	Camera					camera;
+	Lambertian				lambertian1( Math::Vector3D( 0.f, 0.f, 1.f ) );
+	Lambertian				lambertian2( Math::Vector3D( 0.8f, 0.8f, 0.f ) );
+	Metal					metal1( Math::Vector3D( 0.8f, 0.6f, 0.2f ), 0.3f );
+	Dielectric				dielectric( 1.5f );
+
+	Geometry::Sphere		sphere1( Math::Vector3D( 0.f, 0.f, -1.f ), 0.5f, &lambertian1 );
+	Geometry::Sphere		sphere2( Math::Vector3D( 0.f, -100.5f, -1.f ), 100.f, &lambertian2 );
+	Geometry::Sphere		sphere3( Math::Vector3D( 1.f, 0.f, -1.f ), 0.5f, &metal1 );
+	Geometry::Sphere		sphere4( Math::Vector3D( -1.f, 0.f, -1.f ), 0.5f, &dielectric );
+	Geometry::Sphere		sphere5( Math::Vector3D( -1.f, 0.f, -1.f ), -0.45f, &dielectric );
+	Camera					camera( Math::Vector3D( -2.f, 2.f, 1.f ), Math::Vector3D( 0.f, 0.f, -1.f ), Math::Vector3D( 0.f, 1.f, 0.f ), 90.f, ( float ) width / height );
 	HitableList				world;
 
 	world.Append( &sphere1 );
 	world.Append( &sphere2 );
+	world.Append( &sphere3 );
+	world.Append( &sphere4 );
+	world.Append( &sphere5 );
 
 	for ( int j = height - 1; j >= 0; --j )
 		for ( int i = 0; i < width; ++i )
@@ -71,7 +74,7 @@ int main()
 
 				Math::Ray			ray = camera.GetRay( u, v );
 				Math::Vector3D		position = ray.PointAtParameter( 2.f );
-				color += Color( ray, &world );
+				color += Color( ray, &world, 0 );
 			}
 
 			color /= ( float ) countSamples;

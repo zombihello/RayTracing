@@ -34,3 +34,4 @@
 Release/*
 raytracing/Release/*
 raytracing/.vs/*
+output/*

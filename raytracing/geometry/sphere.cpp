@@ -19,6 +19,7 @@ bool Geometry::Sphere::IsHit( const Math::Ray& Ray, float TMin, float TMax, HitR
 			HitRecord.t = temp;
 			HitRecord.p = Ray.PointAtParameter( HitRecord.t );
 			HitRecord.normal = ( HitRecord.p - center ) / radius;
+			HitRecord.material = material;
 			return true;
 		}
 
@@ -28,6 +29,7 @@ bool Geometry::Sphere::IsHit( const Math::Ray& Ray, float TMin, float TMax, HitR
 			HitRecord.t = temp;
 			HitRecord.p = Ray.PointAtParameter( HitRecord.t );
 			HitRecord.normal = ( HitRecord.p - center ) / radius;
+			HitRecord.material = material;
 			return true;
 		}
 	}
@@ -38,15 +40,17 @@ bool Geometry::Sphere::IsHit( const Math::Ray& Ray, float TMin, float TMax, HitR
 // ------------------------------------------------------------------------------------ //
 // Constructor
 // ------------------------------------------------------------------------------------ //
-Geometry::Sphere::Sphere() :
+Geometry::Sphere::Sphere( IMaterial* Material ) :
 	center( 0.f, 0.f, 0.f ),
-	radius( 0.f )
+	radius( 0.f ),
+	material( Material )
 {}
 
 // ------------------------------------------------------------------------------------ //
 // Constructor
 // ------------------------------------------------------------------------------------ //
-Geometry::Sphere::Sphere( const Math::Vector3D& Center, float Radius ) :
+Geometry::Sphere::Sphere( const Math::Vector3D& Center, float Radius, IMaterial* Material ) :
 	center( Center ),
-	radius( Radius )
+	radius( Radius ),
+	material( Material )
 {}
