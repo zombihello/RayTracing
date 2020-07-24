@@ -35,6 +35,9 @@
     <ClCompile Include="dielectric.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\vector3d.h">
@@ -71,6 +74,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="dielectric.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

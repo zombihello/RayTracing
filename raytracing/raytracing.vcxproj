@@ -155,6 +155,7 @@
     <ClCompile Include="lambertian.cpp" />
     <ClCompile Include="metal.cpp" />
     <ClCompile Include="raytracing.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="math\ray.h" />
     <ClInclude Include="math\vector3d.h" />
     <ClInclude Include="metal.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

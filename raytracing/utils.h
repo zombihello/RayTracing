@@ -17,9 +17,15 @@ inline float		drand48()
 	return ( float ) rand() / RAND_MAX;
 }
 
+inline double		DRandom()
+{
+	return rand() / ( RAND_MAX + 1.f );
+}
+
 //---------------------------------------------------------------------//
 
 Math::Vector3D		RandomInUnitSphere();
+Math::Vector3D		RandomInUnitDisk();
 Math::Vector3D		Reflect( const Math::Vector3D& Vector, const Math::Vector3D& Normal );
 bool				Refract( const Math::Vector3D& Vector, const Math::Vector3D& Normal, float NiOvertNt, Math::Vector3D& Refracted );
 float				Schlick( float Cosine, float RefIdx );

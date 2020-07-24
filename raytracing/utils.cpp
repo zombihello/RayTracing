@@ -18,6 +18,20 @@ Math::Vector3D		RandomInUnitSphere()
 }
 
 // ------------------------------------------------------------------------------------ //
+// Get random vector in normalized disk
+// ------------------------------------------------------------------------------------ //
+Math::Vector3D RandomInUnitDisk()
+{
+	Math::Vector3D		position;
+	do
+	{
+		position = 2.f * Math::Vector3D( drand48(), drand48(), 0.f ) - Math::Vector3D( 1.f, 1.f, 0.f );
+	}
+	while ( Math::Vector3D::Dot( position, position ) >= 1.f );
+	return position;
+}
+
+// ------------------------------------------------------------------------------------ //
 // Get reflect
 // ------------------------------------------------------------------------------------ //
 Math::Vector3D Reflect( const Math::Vector3D& Vector, const Math::Vector3D& Normal )
